@@ -1,5 +1,5 @@
 # GKC: Graph Kernel Collection
-Public Release of parts of CMU-SPEED's implementations of GAP benchmark suite.
+Public Release of CMU-SPEED's implementations of GAP benchmark suite.
 The 6 graph algorithms in the GAP Benchmark Suite are represented here (BFS, 
 Betweeness Centrality, Connected Components, Pagerank, SSSP, and Triangle Counting).
 
