@@ -1,0 +1,43 @@
+#PBS -N bfs_plat32
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=2:plat8153
+
+EXEC=bfs_PLAT.x
+DATADIR="/home/u32251/GraphData/gap_processed/"
+SOURCESDIR="/home/u32251/GraphData/gap_sources/"
+BASEDIR="/home/u32251/CMU/Repos/CMU-GAP-Rel/BFS/pbs/"
+OUTDIR="${BASEDIR}outputs/"
+cd $BASEDIR
+export OMP_DISPLAY_ENV=true
+
+# for symmetric graphs
+for GRAPH in kron urand road
+do
+ name=${GRAPH}_symm
+ # run using all available cores (no HT)
+ export OMP_NUM_THREADS=32
+ OUTPUT="${OUTDIR}${GRAPH}_64_DO_DAVIS_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ export KMP_AFFINITY="verbose,explicit,proclist=[0-15,16-31]"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" \
+ "${SOURCESDIR}${GRAPH}.sources" >> ${OUTPUT} 2>&1
+done
+
+# For non-symmetric graphs
+for GRAPH in web twitter
+do
+ name=${GRAPH}
+ # run using all available cores (no HT)
+ export OMP_NUM_THREADS=32
+ OUTPUT="${OUTDIR}${GRAPH}_64_DO_DAVIS_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ export KMP_AFFINITY="verbose,explicit,proclist=[0-15,16-31]"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" \
+ "${SOURCESDIR}${GRAPH}.sources" >> ${OUTPUT} 2>&1
+done

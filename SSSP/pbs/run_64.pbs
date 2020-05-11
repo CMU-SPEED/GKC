@@ -1,0 +1,96 @@
+#PBS -N sssp_64_PLAT
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=2:plat8153
+
+EXEC=sssp_PLAT.x
+DATADIR="/home/u32251/GraphData/gap_processed/"
+SOURCESDIR="/home/u32251/GraphData/gap_sources/"
+BASEDIR="/home/u32251/CMU/Repos/CMU-GAP-Rel/SSSP/pbs/"
+OUTDIR="${BASEDIR}outputs/"
+cd $BASEDIR
+export OMP_DISPLAY_ENV=true
+# 64 threads (with HT): 
+export OMP_NUM_THREADS=64
+export KMP_AFFINITY="verbose,explicit,proclist=[0-15,16-31,32-47,48-63]"
+
+# for symmetric graph (kron)
+for DELTA in 32 
+do
+ GRAPH=kron
+ name=${GRAPH}_symm
+ OUTPUT="${OUTDIR}${GRAPH}_64_SSSP_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" \
+ "${DELTA}" \
+ "${SOURCESDIR}${GRAPH}.sources" \
+ "${DATADIR}${name}_va.bin" >> ${OUTPUT} 2>&1
+done
+
+# for symmetric graph (urand)
+for DELTA in 8
+do
+ GRAPH=urand
+ name=${GRAPH}_symm
+ OUTPUT="${OUTDIR}${GRAPH}_64_SSSP_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" \
+ "${DELTA}" \
+ "${SOURCESDIR}${GRAPH}.sources" \
+ "${DATADIR}${name}_va.bin" >> ${OUTPUT} 2>&1
+done
+
+# for symmetric graph (road)
+for DELTA in 262144
+do
+ GRAPH=road
+ name=${GRAPH}_symm
+ OUTPUT="${OUTDIR}${GRAPH}_64_SSSP_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" \
+ "${DELTA}" \
+ "${SOURCESDIR}${GRAPH}.sources" \
+ "${DATADIR}${name}_va.bin" >> ${OUTPUT} 2>&1
+done
+
+# For non-symmetric graphs (web)
+for DELTA in 128
+do
+ GRAPH=web
+ name=${GRAPH}
+ # Now for 64 threads (with HT): 
+ OUTPUT="${OUTDIR}${GRAPH}_64_SSSP_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" \
+ "${DELTA}" \
+ "${SOURCESDIR}${GRAPH}.sources" \
+ "${DATADIR}${name}_va.bin" >> ${OUTPUT} 2>&1
+done
+
+# For non-symmetric graph (twitter) 
+for DELTA in 32
+do
+ GRAPH=twitter
+ name=${GRAPH}
+ # Now for 64 threads (with HT): 
+ OUTPUT="${OUTDIR}${GRAPH}_64_SSSP_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" \
+ "${DELTA}" \
+ "${SOURCESDIR}${GRAPH}.sources" \
+ "${DATADIR}${name}_va.bin" >> ${OUTPUT} 2>&1
+done

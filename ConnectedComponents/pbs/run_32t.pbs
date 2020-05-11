@@ -1,0 +1,24 @@
+#PBS -N cc_PLAT32
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=2:plat8153
+
+EXEC="cc_PLAT.x"
+DATADIR="/home/u32251/GraphData/gap_processed/"
+BASEDIR="/home/u32251/CMU/Repos/CMU-GAP-Rel/ConnectedComponents/pbs/"
+OUTDIR="${BASEDIR}outputs/"
+cd $BASEDIR
+export OMP_DISPLAY_ENV=true
+export OMP_NUM_THREADS=32
+
+for GRAPH in kron urand road twitter web
+do
+ name=${GRAPH}_symm
+ # run with 32 threads, using all available HW cores (no HT)
+ OUTPUT="${OUTDIR}${GRAPH}_BFS-SV-CC_plat8153_${OMP_NUM_THREADS}_threads.dat"
+ export KMP_AFFINITY="verbose,explicit,proclist=[0-15,16-31]"
+ echo $DATE >> ${OUTPUT}
+ hostname   >> ${OUTPUT}
+ numactl --interleave=all ./${EXEC} \
+ "${DATADIR}${name}_ia.bin" \
+ "${DATADIR}${name}_ja.bin" >> ${OUTPUT} 2>&1
+done
