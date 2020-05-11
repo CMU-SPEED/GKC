@@ -1,0 +1,34 @@
+# Latex things
+*.aux
+*.log
+*.pdf
+*.synctex.gz
+
+# Vim things:
+*.swp
+*.swo
+.nfs*
+
+# Emacs things:
+*.*~
+
+# Misc:
+*.*.BAK
+
+# Compilation outputs
+*.o
+*.out
+*.s
+*.x
+*.bin
+*.opt-report
+*.optrpt
+
+# qsub outputs and related scripts
+*.o[0-9]*
+*.e[0-9]*
+*.dat
+*.csv
+*.pbs
+*.sh
+
