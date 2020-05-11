@@ -46,7 +46,6 @@
 #include "immintrin.h"
 #include "utils.h"
 #include "graph.h"
-#include "SIMD_intersection.h"
 #include <omp.h>
 #include <math.h>
 
