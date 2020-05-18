@@ -21,8 +21,8 @@ The main driver file (typically main.cpp, or [name of algorithm].cpp) can be
 modified and recompiled with the static library provided for the algorithm.
 
 The static library file (.a) in each algorithm directory has been compiled with
-icpc (ICC) version 19.1 20200306. For best results, the remainder of the code
-should be compiled with the same compiler.
+icpc (ICC) version 19.1 20200306. The graph algorithms **MUST** be compiled on 
+devcloud using this compiler.
 
 To use icpc (ICC) 19.1 20200306 on devcloud, you should add the following lines
 to your bash\_profile:
